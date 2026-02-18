@@ -4,6 +4,8 @@ import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.pdf.PdfDocument
 import android.graphics.pdf.PdfRenderer
 import android.os.ParcelFileDescriptor
@@ -301,6 +303,9 @@ class MainActivity : FlutterActivity() {
                     val width = (page.width * scale).toInt()
                     val height = (page.height * scale).toInt()
                     val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+                    // Fill with white so PDF transparent background doesn't become black.
+                    val canvas = Canvas(bitmap)
+                    canvas.drawColor(Color.WHITE)
                     page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
                     page.close()
                     // Adaptive JPEG compression for multi-page: keep each page under ~70KB when possible.
